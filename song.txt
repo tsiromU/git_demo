@@ -4,3 +4,55 @@ on this their chosen battlefield
 
 form the lines
 shield by shield 
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int N = 7007;
+int ANS[N][N];
+int a[N];
+string s;
+
+int calc(int n, int m);
+
+int main()
+{
+    int len;
+    cin >> s;
+    len = s.length();
+    for(int i = 0; i < len; i++){
+        ANS[i][i] = 1;    
+    }
+    for(int i = 1; i < len; i++){
+        for(int j = 0; i+j< len; j++){
+            ANS[j][i+j] = calc(j, i+j);
+        }
+    }
+    cout << ANS[0][len-1];
+    return 0;
+}
+
+int calc(int n, int m){
+    char a = s[m];
+    char b = s[n];
+    if(n == m)
+        return 1;
+    if(m < n){
+        cerr << "catastrophy" << endl;
+        exit(-1);
+    }
+    if(m-n == 1){
+        return (1-(s[n]==s[m]))*2;
+    }
+    if(a == b)
+        return ( 2+ ANS[n+1][m-1]);
+    int ans = ANS[n+1][m-1];
+    if(s.find_first_of(s[m], n) < m){
+        ans = min(ans, ANS[s.find_first_of(s[m], n)+1][m]);
+    }
+    if(s.find_first_of(s[n], m) > n){
+        ans = min(ans, ANS[n][s.find_first_of(s[n], m)-1]);
+    }
+    return ans;
+};
